@@ -17,7 +17,7 @@ def get_llm_response(prompt):
     # Carrega o modelo Ollama (certifique-se de que o modelo esteja disponível)
     # ollama pull llama3.2:3b-instruct-q4_K_S 
     # É preciso usar o llama3.2:3b -> para funcionar direito.
-    llm = OllamaLLM(model="llama3.2:3b-instruct-q2_K")
+    llm = OllamaLLM(model="llama3.2:1b")
     agent = create_csv_agent(llm, "CSVs/iris.csv", verbose=False, tools=[PythonREPLTool()], allow_dangerous_code=True, agent_executor_kwargs={"handle_parsing_errors": True})
 
     response = ""

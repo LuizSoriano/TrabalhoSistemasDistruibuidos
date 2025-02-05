@@ -1,135 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Chat LLM</title>
+        <link rel="stylesheet" href="style.css" />
+        <script src="script.js" defer></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat LLM</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-
-        #chat-container {
-            flex: 1;
-            overflow-y: auto;
-            padding: 10px;
-            border: 1px solid #ccc;
-            background-color: #f9f9f9;
-        }
-
-        .message {
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 5px;
-        }
-
-        .user-message {
-            background-color: #d1e7dd;
-            text-align: right;
-        }
-
-        .bot-message {
-            background-color: #e2e3e5;
-            text-align: left;
-        }
-
-        #input-container {
-            display: flex;
-            padding: 10px;
-            border-top: 1px solid #ccc;
-        }
-
-        #input-box {
-            flex: 1;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        #send-button {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin-left: 5px;
-            border: none;
-            background-color: #007bff;
-            color: white;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        #send-button:hover {
-            background-color: #0056b3;
-        }
-    </style>
-</head>
-
-<body>
-    <div id="chat-container"></div>
-    <div id="input-container">
-        <input id="input-box" type="text" placeholder="Digite seu prompt aqui...">
-        <button id="send-button">Enviar</button>
-    </div>
-
-    <script>
-        const chatContainer = document.getElementById('chat-container');
-        const inputBox = document.getElementById('input-box');
-        const sendButton = document.getElementById('send-button');
-
-        function appendMessage(message, sender) {
-            const messageDiv = document.createElement('div');
-            messageDiv.classList.add('message', sender === 'user' ? 'user-message' : 'bot-message');
-            messageDiv.textContent = message;
-            chatContainer.appendChild(messageDiv);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
-
-        sendButton.addEventListener('click', async () => {
-            const prompt = inputBox.value.trim();
-
-            if (!prompt) {
-                alert('Por favor, digite um prompt.');
-                return;
-            }
-
-            // Adiciona a mensagem do usuário no chat
-            appendMessage(prompt, 'user');
-            inputBox.value = '';
-
-            try {
-                const response = await fetch('/api/prompt', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ prompt }),
-                });
-
-                if (!response.ok) {
-                    throw new Error('Erro ao enviar o prompt.');
-                }
-
-                const data = await response.json();
-                appendMessage(data.response || 'Resposta vazia do servidor.', 'bot');
-            } catch (error) {
-                console.error(error);
-                appendMessage('Erro ao se conectar ao servidor.', 'bot');
-            }
-        });
-
-        // Permitir envio com a tecla Enter
-        inputBox.addEventListener('keypress', (event) => {
-            if (event.key === 'Enter') {
-                sendButton.click();
-            }
-        });
-    </script>
-</body>
-
+    <body>
+        <div id="chat-container"></div>
+        <form id="input-container">
+            <h1>Como posso ajudar?</h1>
+            <div id="actions">
+                <textarea id="input-box" type="text" placeholder="Envie uma mensagem..."></textarea>
+                <label for="insert-button"><input id="insert-button" type="file"><i class="fa-solid fa-paperclip"></i></input></label>
+                <button id="send-button"><i class="fa-solid fa-arrow-up"></i></button>
+            </div>
+        </form>
+    </body>
 </html>

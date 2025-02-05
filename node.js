@@ -19,7 +19,7 @@ app.post('/api/prompt', (req, res) => {
   }
 
   // Chama o script Python
-  const pythonProcess = spawn('python3', ['/home/soriano/TrabalhoSolos/llama_preprocessamento.py', prompt]);
+  const pythonProcess = spawn('python3', ['llama_preprocessamento.py', prompt]);
 
   let pythonOutput = '';
 

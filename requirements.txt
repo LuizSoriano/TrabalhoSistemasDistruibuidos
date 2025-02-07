@@ -6,3 +6,5 @@ pandas
 numpy
 ollama
 langchain
+langchain_experimental
+langchain_ollama

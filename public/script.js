@@ -74,7 +74,7 @@ sendButton.addEventListener("click", async (e) => {
     }
 });
 
-// Permite envio com "Enter" (apenas para LLM)
+// Permite envio de mensagens com "Enter"
 inputBox.addEventListener("keypress", (e) => {
     if (e.key === "Enter" && agentSelector.value === "llm") {
         sendButton.click();
@@ -108,10 +108,10 @@ async function sendPromptToLLM() {
         if (!response.ok) throw new Error("Erro ao enviar o prompt.");
 
         const data = await response.json();
-        appendMessage(data.response || "Resposta vazia do servidor.", "bot");
+        appendMessage(data.response || "❌ Resposta vazia do servidor.", "bot");
     } catch (error) {
         console.error(error);
-        appendMessage("Erro ao se conectar ao servidor.", "bot");
+        appendMessage("❌ Erro ao se conectar ao servidor.", "bot");
     }
 }
 
@@ -126,12 +126,11 @@ async function sendCSVToServer() {
     formData.append("file", file);
 
     try {
-        const endpoint = agentSelector.value === "predict" ? "/api/predict" : "/api/upload-csv";
+        const endpoint = agentSelector.value === "predict" ? "http://localhost:3000/api/predict" : "http://localhost:3000/api/upload-csv";
         const response = await fetch(endpoint, { method: "POST", body: formData });
 
         if (!response.ok) throw new Error("Erro ao enviar o arquivo.");
 
-        const data = await response.json();
         appendMessage(`✅ Arquivo ${file.name} recebido. ${agentSelector.value === "predict" ? "Predição gerada!" : "Agora você pode perguntar ao LLM."}`, "bot");
 
         if (agentSelector.value === "llm") {

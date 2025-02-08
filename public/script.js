@@ -1,4 +1,3 @@
-// Seletores do DOM
 const chatContainer = document.querySelector("#chat-container");
 const inputBox = document.querySelector("#input-box");
 const sendButton = document.querySelector("#send-button");
@@ -6,7 +5,6 @@ const fileInput = document.querySelector("#insert-button");
 const agentSelector = document.querySelector("#agent-selector");
 const title = document.querySelector("h1");
 
-// Variáveis de controle
 let primeiraMensagem = true;
 let llmFileUploaded = false;
 let currentCSV = null;

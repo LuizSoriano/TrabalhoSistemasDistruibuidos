@@ -19,7 +19,7 @@ function appendMessage(message, sender) {
     messageDiv.classList.add("message", sender === "user" ? "user-message" : "bot-message");
     const messageText = document.createElement("p");
     messageText.classList.add("message-text");
-    messageText.textContent = message;
+    messageText.innerHTML = message;
     messageDiv.appendChild(messageText);
     chatContainer.appendChild(messageDiv);
     chatContainer.scrollTop = chatContainer.scrollHeight;
@@ -29,7 +29,7 @@ function appendMessage(message, sender) {
 function updateUI() {
     if (agentSelector.value === "predict") {
         inputBox.disabled = true;
-        inputBox.placeholder = "Selecione um arquivo CSV para enviar.";
+        inputBox.placeholder = "Selecione um arquivo CSV...";
     } else {
         inputBox.disabled = false;
         inputBox.placeholder = "Envie uma mensagem...";
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // Atualiza a interface ao trocar de agente
 agentSelector.addEventListener("change", () => {
     localStorage.setItem("selectedAgent", agentSelector.value);
-    appendMessage(`🔄 Agente alterado para ${agentSelector.value}`, "bot"); // Mensagem informativa
+    location.reload();
 });
 
 // Envio de mensagem ou arquivo ao clicar no botão
@@ -107,7 +107,7 @@ async function sendPromptToLLM() {
         const response = await fetch("/api/llm", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ prompt, file: currentCSV }),
+            body: JSON.stringify({ prompt, filePath: currentCSV }),
         });
 
         if (!response.ok) throw new Error("Erro ao enviar o prompt.");
@@ -115,7 +115,6 @@ async function sendPromptToLLM() {
         const data = await response.json();
         appendMessage(data.response || "❌ Resposta vazia do servidor.", "bot");
     } catch (error) {
-        console.error(error);
         appendMessage("❌ Erro ao se conectar ao servidor.", "bot");
     }
 }
@@ -123,7 +122,7 @@ async function sendPromptToLLM() {
 // Envia um arquivo CSV para o backend (ML ou LLM)
 async function sendCSVToServer() {
     if (!fileInput.files.length) return alert("Por favor, selecione um arquivo CSV.");
-    
+
     const file = fileInput.files[0];
     appendMessage(`📤 Enviando arquivo: ${file.name}...`, "user");
 
@@ -131,33 +130,32 @@ async function sendCSVToServer() {
     formData.append("file", file);
 
     try {
-        const endpoint = agentSelector.value === "predict" 
-            ? "http://localhost:3000/api/predict" 
+        const endpoint = agentSelector.value === "predict"
+            ? "http://localhost:3000/api/predict"
             : "http://localhost:3000/api/upload";
-            
+
         const response = await fetch(endpoint, { method: "POST", body: formData });
 
         if (!response.ok) throw new Error("Erro ao enviar o arquivo.");
 
         const data = await response.json();
         console.log("Resposta do servidor:", data);
-        
-        if (data.prediction) {
-            const predictionMessage = `✅ Predição gerada:
-            Argila: ${data.prediction.argila}%
-            Silte: ${data.prediction.silte}%
-            Areia: ${data.prediction.areia}%`;
-            appendMessage(predictionMessage, "bot");
-        } else {
-            appendMessage("❌ Erro na predição.", "bot");
-        }
 
-        if (agentSelector.value === "llm") {
+        if (agentSelector.value === "predict") {
+            if (data.prediction) {
+                const predictionMessage = `✅ Predição gerada:
+                Argila: ${data.prediction.Argila}%
+                Silte: ${data.prediction.Silte}%
+                Areia Total: ${data.prediction["Areia Total"]}%`;
+                appendMessage(`<pre>${predictionMessage}</pre>`, "bot");
+            } else {
+                appendMessage("❌ Erro na predição.", "bot");
+            }
+        } else {
             llmFileUploaded = true;
-            currentCSV = file.name;
+            currentCSV = data.filePath;
         }
     } catch (error) {
-        console.error(error);
         appendMessage("❌ Erro ao se conectar ao servidor.", "bot");
     }
 }

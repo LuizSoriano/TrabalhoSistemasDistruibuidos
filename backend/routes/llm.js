@@ -5,16 +5,16 @@ const path = require('path');
 const router = express.Router();
 
 router.post('/', (req, res) => {
-    const { prompt, file } = req.body;
+    const { prompt, filePath } = req.body;
 
     if (!prompt) return res.status(400).json({ error: 'Prompt é obrigatório' });
-    if (!file) return res.status(400).json({ error: 'Nenhum arquivo CSV foi enviado para o LLM.' });
+    if (!filePath) return res.status(400).json({ error: 'Nenhum arquivo CSV foi enviado para o LLM.' });
 
-    console.log(`Enviando prompt ao LLM: "${prompt}" com CSV: ${file}`);
+    console.log(`Enviando prompt ao LLM: "${prompt}" com CSV: ${filePath}`);
 
-    const pythonScript = path.join(__dirname, '../agents/llama_preprocessamento.py');
+    const pythonScript = path.join(__dirname, '../../agents/llama_preprocessamento.py');
 
-    const pythonProcess = spawn('python3', [pythonScript, prompt, file]);
+    const pythonProcess = spawn('python3', [pythonScript, prompt, filePath]);
 
     let pythonOutput = '';
 

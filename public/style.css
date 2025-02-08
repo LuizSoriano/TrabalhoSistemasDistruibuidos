@@ -40,7 +40,7 @@ body {
 .user-message .message-text {
     padding: 5px 10px;
     border-radius: 5px;
-    background-color: #acacac;
+    background-color: #ccc;
 }
 
 .bot-message {
@@ -60,20 +60,31 @@ h1 {
     margin-bottom: 20px;
 }
 
+#actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+}
+
 #input-box {
-    width: 90%;
+    flex: 1;
     padding: 10px;
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 5px;
     resize: none;
-    height: 60px;
+    height: 50px;
 }
 
-#actions {
-    display: flex;
-    gap: 10px;
-    align-items: center;
+#agent-selector {
+    width: 150px;
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 label {
@@ -90,17 +101,43 @@ input[type="file"] {
 button,
 label {
     font-size: 1rem;
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
     border: none;
     background-color: black;
     color: white;
-    border-radius: 5px;
     cursor: pointer;
     border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 button:hover,
 label:hover {
-    opacity: .8;
+    opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 50px;
+    }
+
+    button,
+    label {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    
+    #agent-selector {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 5px;
+    }
 }

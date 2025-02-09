@@ -107,7 +107,7 @@ async function sendPromptToLLM() {
         const response = await fetch("/api/llm", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ prompt, filePath: currentCSV }),
+            body: JSON.stringify({ prompt, csvPath: currentCSV }),
         });
 
         if (!response.ok) throw new Error("Erro ao enviar o prompt.");
@@ -130,16 +130,13 @@ async function sendCSVToServer() {
     formData.append("file", file);
 
     try {
-        const endpoint = agentSelector.value === "predict"
-            ? "http://localhost:3000/api/predict"
-            : "http://localhost:3000/api/upload";
+        const endpoint = agentSelector.value === "predict" ? "/api/predict" : "/api/upload";
 
         const response = await fetch(endpoint, { method: "POST", body: formData });
 
         if (!response.ok) throw new Error("Erro ao enviar o arquivo.");
 
         const data = await response.json();
-        console.log("Resposta do servidor:", data);
 
         if (agentSelector.value === "predict") {
             if (data.prediction) {
@@ -153,7 +150,7 @@ async function sendCSVToServer() {
             }
         } else {
             llmFileUploaded = true;
-            currentCSV = data.filePath;
+            currentCSV = data.csvPath;
         }
     } catch (error) {
         appendMessage("❌ Erro ao se conectar ao servidor.", "bot");

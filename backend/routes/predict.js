@@ -10,7 +10,7 @@ router.post('/', upload.single('file'), (req, res) => {
     if (!req.file) return res.status(400).json({ error: 'Nenhum arquivo enviado' });
 
     const csvPath = req.file.path;
-    console.log(`CSV recebido para predição: ${csvPath}`);
+    console.log(`Enviando CSV para predição: ${csvPath}`);
 
     const pythonProcess = spawn('python3', ['../agents/agenteML.py', csvPath]);
 

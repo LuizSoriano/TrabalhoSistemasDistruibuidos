@@ -26,7 +26,8 @@ router.post('/', (req, res) => {
 
     pythonProcess.on('close', (code) => {
         if (code === 0) {
-            res.json({ response: pythonOutput.trim() });
+            const response = pythonOutput.trim().split('\n').pop();
+            res.json({ response });
         } else {
             res.status(500).json({ error: 'Erro ao processar a resposta do LLM' });
         }

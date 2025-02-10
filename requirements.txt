@@ -1,10 +1,8 @@
-transformers
-torch
-datasets
-celery
 pandas
 numpy
 ollama
 langchain
 langchain_experimental
 langchain_ollama
+scikit-learn
+tabulate

@@ -1,18 +1,18 @@
 const express = require('express');
 const { spawn } = require('child_process');
-const path = require('path');
-
 const router = express.Router();
 
 router.post('/', (req, res) => {
     const { prompt, csvPath } = req.body;
+    const ollamaHost = req.ollamaHost;  // Recebe a URL do Ollama do server.js
 
     if (!prompt) return res.status(400).json({ error: 'Prompt é obrigatório' });
     if (!csvPath) return res.status(400).json({ error: 'Nenhum arquivo CSV foi enviado para o LLM.' });
 
     console.log(`Enviando prompt ao LLM: "${prompt}" com CSV: ${csvPath}`);
+    console.log(`Ollama host: ${ollamaHost}`);
 
-    const pythonProcess = spawn('python3', ['../agents/llama_preprocessamento.py', prompt, csvPath]);
+    const pythonProcess = spawn('python3', ['../agents/llama_preprocessamento.py', prompt, csvPath, ollamaHost]);
 
     let pythonOutput = '';
 

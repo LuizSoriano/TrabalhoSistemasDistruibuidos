@@ -15,6 +15,7 @@ with open("../agents/models/rf_reg_sistemas_distribuidos.pkl", "rb") as f:
     random_forest_reg = load(f)
 
 csv = pd.read_csv(csv_path)
+id_column = csv["ID"]
 csv.drop(["ID", "Argila", "Silte", "Areia Total"], axis=1, inplace=True)
 
 log_columns = ["CaO", "Cr", "Cu", "K2O", "Ni", "Sr", "V"]
@@ -25,7 +26,10 @@ scaler = StandardScaler()
 X_ts_scaled = scaler.fit_transform(csv)
 
 labels = ["Argila", "Silte", "Areia Total"]
-predictions = random_forest_reg.predict(X_ts_scaled[:1])
+predictions = random_forest_reg.predict(X_ts_scaled)
 
-result = {label: float(prediction) for label, prediction in zip(labels, predictions[0])}
-print(json.dumps(result))
+results = []
+for id, preds in zip(id_column.tolist(), predictions):
+    results.append({label: round(float(prediction), 2) for label, prediction in zip(labels, list(preds))})
+
+print(json.dumps(results))

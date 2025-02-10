@@ -139,12 +139,17 @@ async function sendCSVToServer() {
         const data = await response.json();
 
         if (agentSelector.value === "predict") {
+            let cont = 0
             if (data.prediction) {
-                const predictionMessage = `✅ Predição gerada:
-                Argila: ${data.prediction.Argila}%
-                Silte: ${data.prediction.Silte}%
-                Areia Total: ${data.prediction["Areia Total"]}%`;
-                appendMessage(`<pre>${predictionMessage}</pre>`, "bot");
+                data.prediction.forEach((pred) => {
+                    cont++
+                    const predictionMessage = `✅ Predição ${cont}:
+                    Argila: ${pred.Argila}%
+                    Silte: ${pred.Silte}%
+                    Areia Total: ${pred["Areia Total"]}%`;
+                    appendMessage(`<pre>${predictionMessage}</pre>`, "bot");
+                });
+                
             } else {
                 appendMessage("❌ Erro na predição.", "bot");
             }
